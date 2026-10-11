@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>freeCodeCamp Survey Form</title>
+  <style>
+    :root {
+      --bg: #0a0a23;
+      --card: #1b1b32;
+      --field: #2a2a40;
+      --border: #3b3b4f;
+      --text: #f5f6f7;
+      --muted: #c4c4d0;
+      --accent: #f1be32;
+      --accent-dark: #d09d12;
+      --error: #ff6b6b;
+      --ok: #5ee08a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 32px 16px 56px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 20% 0%, #1d1d4a 0%, var(--bg) 55%);
+      color: var(--text); line-height: 1.5;
+    }
+    .wrap { max-width: 640px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 24px; }
+    h1 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: 0 0 8px; }
+    h1 span { color: var(--accent); }
+    #description { color: var(--muted); margin: 0; font-style: italic; }
+
+    .progress { height: 6px; background: var(--field); border-radius: 3px; overflow: hidden; margin: 20px 0 6px; }
+    .progress div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--ok)); transition: width .3s; }
+    .progress-text { font-size: .8rem; color: var(--muted); text-align: right; margin-bottom: 14px; }
+
+    form { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+    .field { margin-bottom: 22px; }
+    label, legend { display: block; font-weight: 600; margin-bottom: 6px; padding: 0; }
+    .req::after { content: " *"; color: var(--accent); }
+    .hint { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+    fieldset { border: 0; padding: 0; margin: 0 0 22px; }
+
+    input[type="text"], input[type="email"], input[type="number"], select, textarea {
+      width: 100%; padding: 12px 14px; font: inherit; color: var(--text);
+      background: var(--field); border: 2px solid var(--border); border-radius: 10px; transition: border-color .15s, box-shadow .15s;
+    }
+    input::placeholder, textarea::placeholder { color: #8a8aa0; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(241,190,50,.25); }
+    textarea { min-height: 120px; resize: vertical; }
+    /* Only flag fields as invalid after the user has touched them */
+    input.touched:invalid, select.touched:invalid, textarea.touched:invalid { border-color: var(--error); }
+    input.touched:valid:not(:placeholder-shown) { border-color: var(--ok); }
+    .error { color: var(--error); font-size: .8rem; min-height: 1.1em; margin-top: 4px; }
+
+    /* Radios & checkboxes as selectable chips */
+    .options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .option { position: relative; margin: 0; }
+    .option input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; width: 100%; height: 100%; }
+    .option span {
+      display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; font-weight: 500;
+      background: var(--field); border: 2px solid var(--border); transition: .15s; cursor: pointer;
+    }
+    .option input:checked + span { background: rgba(241,190,50,.15); border-color: var(--accent); color: var(--accent); }
+    .option input:focus-visible + span { box-shadow: 0 0 0 3px rgba(241,190,50,.35); }
+    .option:hover span { border-color: var(--accent); }
+
+    .counter { text-align: right; font-size: .8rem; color: var(--muted); }
+    #submit {
+      width: 100%; padding: 14px; font: inherit; font-weight: 700; font-size: 1.05rem; color: #0a0a23; cursor: pointer;
+      background: var(--accent); border: 0; border-radius: 10px; transition: background .15s, transform .1s;
+    }
+    #submit:hover { background: var(--accent-dark); }
+    #submit:active { transform: scale(.99); }
+    .reset { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; margin: 14px auto 0; display: block; font: inherit; font-size: .85rem; }
+
+    /* Thank-you panel */
+    #thanks { display: none; background: var(--card); border: 1px solid var(--ok); border-radius: 16px; padding: 28px; text-align: center; }
+    #thanks h2 { color: var(--ok); margin-top: 0; }
+    #thanks dl { text-align: left; background: var(--field); border-radius: 10px; padding: 14px 18px; margin: 18px 0; }
+    #thanks dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-top: 10px; }
+    #thanks dt:first-child { margin-top: 0; }
+    #thanks dd { margin: 2px 0 0; word-break: break-word; }
+    #thanks button { padding: 10px 20px; font: inherit; font-weight: 600; border-radius: 10px; border: 2px solid var(--accent); background: none; color: var(--accent); cursor: pointer; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1 id="title">freeCode<span>Camp</span> Survey Form</h1>
+      <p id="description">Thank you for taking the time to help us improve the platform</p>
+    </header>
+
+    <div class="progress" aria-hidden="true"><div id="bar"></div></div>
+    <div class="progress-text" id="progressText" aria-live="polite">0% complete</div>
+
+    <form id="survey-form" novalidate>
+      <div class="field">
+        <label id="name-label" for="name" class="req">Name</label>
+        <input id="name" name="name" type="text" placeholder="Enter your name" autocomplete="name" required minlength="2">
+        <div class="error" data-for="name"></div>
+      </div>
+
+      <div class="field">
+        <label id="email-label" for="email" class="req">Email</label>
+        <input id="email" name="email" type="email" placeholder="Enter your email" autocomplete="email" required>
+        <div class="error" data-for="email"></div>
+      </div>
+
+      <div class="field">
+        <label id="number-label" for="number">Age</label>
+        <input id="number" name="age" type="number" min="10" max="100" placeholder="Enter your age (10–100)" inputmode="numeric">
+        <div class="hint">Optional. Must be between 10 and 100.</div>
+        <div class="error" data-for="number"></div>
+      </div>
+
+      <div class="field">
+        <label for="dropdown" class="req">Which option best describes your current role?</label>
+        <select id="dropdown" name="role" required>
+          <option value="" selected disabled>Select current role</option>
+          <option value="student">Student</option>
+          <option value="job">Full-time job</option>
+          <option value="learner">Full-time learner</option>
+          <option value="prefer-not">Prefer not to say</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="error" data-for="dropdown"></div>
+      </div>
+
+      <fieldset>
+        <legend class="req">Would you recommend freeCodeCamp to a friend?</legend>
+        <div class="options" role="radiogroup">
+          <label class="option"><input type="radio" name="recommend" value="definitely" required><span>Definitely</span></label>
+          <label class="option"><input type="radio" name="recommend" value="maybe"><span>Maybe</span></label>
+          <label class="option"><input type="radio" name="recommend" value="not-sure"><span>Not sure</span></label>
+        </div>
+        <div class="error" data-for="recommend"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>What would you like to see improved? <small style="font-weight:400;color:var(--muted)">(Select all that apply)</small></legend>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="improve" value="front-end"><span>Front-end projects</span></label>
+          <label class="option"><input type="checkbox" name="improve" value="back-end"><span>Back-end projects</span></label>
+          <label class="option"><input type="checkbox" name="improve" value="data-viz"><span>Data visualization</span></label>
+          <label class="option"><input type="checkbox" name="improve" value="challenges"><span>Challenges</span></label>
+          <label class="option"><input type="checkbox" name="improve" value="forum"><span>Forum</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="comments">Any comments or suggestions?</label>
+        <textarea id="comments" name="comments" maxlength="500" placeholder="Tell us more…"></textarea>
+        <div class="counter"><span id="count">0</span> / 500</div>
+      </div>
+
+      <input type="submit" id="submit" value="Submit survey">
+      <button type="button" class="reset" id="resetBtn">Clear form</button>
+    </form>
+
+    <section id="thanks" aria-live="polite" tabindex="-1">
+      <h2>Thank you! 🎉</h2>
+      <p>Your feedback has been received. Here's what you sent:</p>
+      <dl id="summary"></dl>
+      <button type="button" id="again">Submit another response</button>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('survey-form');
+    const thanks = document.getElementById('thanks');
+    const bar = document.getElementById('bar');
+    const progressText = document.getElementById('progressText');
+    const comments = document.getElementById('comments');
+
+    // ---- Progress: counts the required fields plus the optional ones the user has filled ----
+    function updateProgress() {
+      const checks = [
+        form.name.value.trim().length >= 2,
+        form.email.validity.valid && form.email.value !== '',
+        form.dropdown.value !== '',
+        !!form.querySelector('input[name="recommend"]:checked'),
+        form.number.value !== '' && form.number.validity.valid,
+        form.querySelectorAll('input[name="improve"]:checked').length > 0,
+        comments.value.trim() !== ''
+      ];
+      const pct = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+      bar.style.width = pct + '%';
+      progressText.textContent = pct + '% complete';
+    }
+
+    // ---- Validation messages ----
+    const messages = {
+      name: 'Please enter your name (at least 2 characters).',
+      email: 'Please enter a valid email address.',
+      number: 'Age must be a number between 10 and 100.',
+      dropdown: 'Please choose your current role.',
+      recommend: 'Please pick one option.'
+    };
+    function showError(key, show) {
+      const el = form.querySelector(`.error[data-for="${key}"]`);
+      if (el) el.textContent = show ? messages[key] : '';
+    }
+    function validateField(field) {
+      const key = field.name === 'recommend' ? 'recommend' : field.id;
+      if (!(key in messages)) return true;
+      const group = field.type === 'radio' ? form.querySelectorAll('input[name="recommend"]') : [field];
+      const valid = field.type === 'radio' ? [...group].some(r => r.checked) : field.checkValidity();
+      field.classList.add('touched');
+      showError(key, !valid);
+      return valid;
+    }
+
+    form.addEventListener('blur', e => { if (e.target.matches('input[type="text"], input[type="email"], input[type="number"], select')) validateField(e.target); }, true);
+    form.addEventListener('input', e => { if (e.target.classList.contains('touched')) validateField(e.target); updateProgress(); });
+    form.addEventListener('change', e => { if (e.target.type === 'radio') validateField(e.target); updateProgress(); });
+
+    // ---- Character counter ----
+    comments.addEventListener('input', () => { document.getElementById('count').textContent = comments.value.length; });
+
+    // ---- Submit ----
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const fields = [form.name, form.email, form.number, form.dropdown, form.querySelector('input[name="recommend"]')];
+      const results = fields.map(validateField);
+      if (results.includes(false)) {
+        const firstBad = fields[results.indexOf(false)];
+        firstBad.focus();
+        return;
+      }
+      showThanks();
+    });
+
+    function showThanks() {
+      const improve = [...form.querySelectorAll('input[name="improve"]:checked')]
+        .map(c => c.parentElement.textContent.trim()).join(', ') || '—';
+      const rec = form.querySelector('input[name="recommend"]:checked').parentElement.textContent.trim();
+      const role = form.dropdown.options[form.dropdown.selectedIndex].text;
+      const rows = [
+        ['Name', form.name.value.trim()],
+        ['Email', form.email.value.trim()],
+        ['Age', form.number.value || '—'],
+        ['Current role', role],
+        ['Would recommend', rec],
+        ['Improve', improve],
+        ['Comments', comments.value.trim() || '—']
+      ];
+      const dl = document.getElementById('summary');
+      dl.innerHTML = '';
+      rows.forEach(([k, v]) => {
+        const dt = document.createElement('dt'); dt.textContent = k;   // textContent avoids injecting user HTML
+        const dd = document.createElement('dd'); dd.textContent = v;
+        dl.append(dt, dd);
+      });
+      form.style.display = 'none';
+      document.querySelector('.progress').style.display = 'none';
+      progressText.style.display = 'none';
+      thanks.style.display = 'block';
+      thanks.focus();
+    }
+
+    // ---- Reset / start over ----
+    function resetAll() {
+      form.reset();
+      form.querySelectorAll('.touched').forEach(el => el.classList.remove('touched'));
+      form.querySelectorAll('.error').forEach(el => el.textContent = '');
+      document.getElementById('count').textContent = '0';
+      updateProgress();
+    }
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+    document.getElementById('again').addEventListener('click', () => {
+      resetAll();
+      thanks.style.display = 'none';
+      form.style.display = '';
+      document.querySelector('.progress').style.display = '';
+      progressText.style.display = '';
+      form.name.focus();
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>

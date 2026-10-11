@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tribute to Dr. Norman Borlaug</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbf7ee;
+      --paper: #ffffff;
+      --ink: #2b2a26;
+      --muted: #6b675c;
+      --gold: #c8951b;
+      --gold-dark: #9a7010;
+      --green: #3b5d2a;
+      --line: #e6dfcb;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", system-ui, sans-serif;
+      line-height: 1.7;
+    }
+
+    /* Keep the original image rules (required for the freeCodeCamp tests) */
+    img {
+      display: block;
+    }
+
+    #image {
+      height: auto;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    #main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 56px 20px 40px;
+    }
+
+    /* Header */
+    .intro { text-align: center; margin-bottom: 36px; }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gold-dark);
+    }
+
+    #title {
+      margin: 0;
+      font-family: "Merriweather", Georgia, serif;
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      line-height: 1.15;
+      color: var(--green);
+    }
+
+    .tagline {
+      margin: 12px 0 0;
+      font-family: "Merriweather", Georgia, serif;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* Image */
+    #img-div {
+      margin: 0 0 44px;
+      padding: 12px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 14px 34px rgba(60, 50, 20, 0.14);
+    }
+
+    #img-div #image {
+      border-radius: 10px;
+      width: 100%;
+    }
+
+    #img-caption {
+      padding: 12px 6px 4px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* Sections */
+    h2 {
+      font-family: "Merriweather", Georgia, serif;
+      font-size: 1.6rem;
+      color: var(--green);
+      margin: 0 0 16px;
+    }
+
+    #tribute-info {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--gold);
+      border-radius: 12px;
+      padding: 28px 28px 20px;
+      margin-bottom: 48px;
+    }
+
+    #tribute-info p { margin: 0 0 16px; }
+
+    blockquote {
+      margin: 24px 0 8px;
+      padding: 16px 20px;
+      background: #fbf3dc;
+      border-radius: 10px;
+      font-family: "Merriweather", Georgia, serif;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 8px;
+      font-family: "Inter", sans-serif;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Timeline */
+    #timeline { margin-bottom: 48px; }
+
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0 0 0 28px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .timeline li {
+      position: relative;
+      margin-bottom: 26px;
+      padding-left: 12px;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -38px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      background: var(--bg);
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+    }
+
+    .year {
+      display: inline-block;
+      font-family: "Merriweather", Georgia, serif;
+      font-weight: 700;
+      color: var(--gold-dark);
+    }
+
+    .timeline p { margin: 2px 0 0; }
+
+    /* Call to action */
+    .cta {
+      text-align: center;
+      padding: 32px 20px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 16px;
+    }
+
+    .cta p { margin: 0 0 16px; font-size: 1.1rem; }
+
+    #tribute-link {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--gold);
+      color: #1f1b0e;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 999px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    #tribute-link:hover,
+    #tribute-link:focus-visible {
+      background: #e0a826;
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      text-align: center;
+      padding: 24px 20px 40px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .site-footer p { margin: 0; }
+
+    /* Small screens */
+    @media (max-width: 520px) {
+      #main { padding-top: 36px; }
+      #tribute-info { padding: 22px 18px 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      #tribute-link { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="main">
+
+    <header class="intro">
+      <p class="eyebrow">A Tribute To</p>
+      <h1 id="title">Dr. Norman Borlaug</h1>
+      <p class="tagline">The man who fed the world</p>
+    </header>
+
+    <figure id="img-div">
+      <!-- Replace src with your own photo (e.g. one from Wikimedia Commons). -->
+      <img id="image"
+           src="https://picsum.photos/seed/wheat-field/1200/800"
+           alt="Golden wheat field at harvest time, representing Norman Borlaug's work on wheat">
+      <figcaption id="img-caption">
+        Wheat, the crop Borlaug spent his life improving.
+      </figcaption>
+    </figure>
+
+    <section id="tribute-info" aria-labelledby="about-heading">
+      <h2 id="about-heading">The Father of the Green Revolution</h2>
+      <p>
+        Norman Ernest Borlaug (1914&ndash;2009) was an American agronomist who grew up on a farm in Iowa.
+        Working in Mexico, he developed high-yielding, disease-resistant, semi-dwarf wheat varieties
+        that helped countries such as Mexico, India and Pakistan dramatically increase their harvests.
+      </p>
+      <p>
+        His work is widely credited with helping to avert famine for hundreds of millions of people,
+        and in 1970 he was awarded the Nobel Peace Prize for his contribution to world food supply.
+      </p>
+      <blockquote>
+        &ldquo;Food is the moral right of all who are born into this world.&rdquo;
+        <cite>&mdash; attributed to Norman Borlaug</cite>
+      </blockquote>
+    </section>
+
+    <section id="timeline" aria-labelledby="timeline-heading">
+      <h2 id="timeline-heading">Life &amp; Legacy</h2>
+      <ol class="timeline">
+        <li>
+          <span class="year">1914</span>
+          <p>Born on March 25 near Cresco, Iowa, and raised on the family farm.</p>
+        </li>
+        <li>
+          <span class="year">1940s</span>
+          <p>Begins agricultural research in Mexico, starting the wheat breeding program that would change global farming.</p>
+        </li>
+        <li>
+          <span class="year">1960s</span>
+          <p>His high-yield wheat varieties spread across South Asia, helping nations avoid widespread hunger.</p>
+        </li>
+        <li>
+          <span class="year">1970</span>
+          <p>Awarded the Nobel Peace Prize.</p>
+        </li>
+        <li>
+          <span class="year">1977</span>
+          <p>Receives the Presidential Medal of Freedom.</p>
+        </li>
+        <li>
+          <span class="year">2006</span>
+          <p>Receives the Congressional Gold Medal.</p>
+        </li>
+        <li>
+          <span class="year">2009</span>
+          <p>Passes away on September 12, leaving a legacy of food security and agricultural education.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cta">
+      <p>Want to learn more about his life and work?</p>
+      <a href="https://en.wikipedia.org/wiki/Norman_Borlaug" target="_blank" rel="noopener noreferrer" id="tribute-link">
+        Read his full story on Wikipedia &rarr;
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Made with care as a tribute project.</p>
+  </footer>
+</body>
+</html>

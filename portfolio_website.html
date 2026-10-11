@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio</title>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    /* ---------- Navbar (always at the top) ---------- */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      background-color: rgba(15, 23, 42, 0.92);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 6px; }
+
+    .nav-links a {
+      padding: 8px 14px;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      background-color: var(--panel);
+      color: var(--text);
+    }
+
+    /* ---------- Welcome section (full screen) ---------- */
+    #welcome-section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 30%, #1e2a5a 0%, var(--bg) 65%);
+    }
+
+    #welcome-section h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.4rem, 8vw, 4.5rem);
+      line-height: 1.1;
+    }
+
+    #welcome-section h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    #welcome-section p {
+      max-width: 520px;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 26px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 999px;
+      color: #0f172a;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: transform 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    /* ---------- Projects ---------- */
+    #projects, #contact {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 90px 20px 60px;
+      scroll-margin-top: 20px;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      margin: 0 0 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .project-tile {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .project-tile:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    .preview {
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+    }
+
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 18px;
+    }
+
+    .project-info h3 { margin: 0 0 6px; }
+
+    .project-info p {
+      margin: 0 0 16px;
+      flex: 1;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .project-link {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .project-link:hover { text-decoration: underline; }
+
+    /* ---------- Contact ---------- */
+    #contact { text-align: center; }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .contact-links a {
+      padding: 12px 24px;
+      color: var(--text);
+      text-decoration: none;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .contact-links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    footer {
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ---------- Small screens ---------- */
+    @media only screen and (max-width: 800px) {
+      .project-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media only screen and (max-width: 520px) {
+      #navbar { padding: 0 12px; }
+      .logo { font-size: 1rem; }
+      .nav-links a { padding: 8px 8px; font-size: 0.9rem; }
+      .project-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn, .project-tile, .nav-links a, .contact-links a { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav id="navbar">
+    <a href="#welcome-section" class="logo">Ken</a>
+    <div class="nav-links">
+      <a href="#welcome-section">Home</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <section id="welcome-section">
+    <h1>Hi, I'm <span>Kenneth Lobingco</span></h1>
+    <p>I'm a beginner web developer who loves building simple, friendly websites. Take a look at what I've made so far.</p>
+    <a href="#projects" class="btn">See my work</a>
+  </section>
+
+  <section id="projects">
+    <h2>My Projects</h2>
+    <p class="subtitle">Each one was built while learning HTML, CSS and JavaScript.</p>
+
+    <div class="project-grid">
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #6366f1, #ec4899);">🎵</div>
+        <div class="project-info">
+          <h3>MP3 Player</h3>
+          <p>A music player with a playlist, shuffle, repeat, queue and favorites.</p>
+          <a href="MP3 Player\SimpleMP3Player.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #e11d74, #7c3aed);">🎨</div>
+        <div class="project-info">
+          <h3>ArtRev Gallery</h3>
+          <p>An art and photography showcase with filters, search and a lightbox.</p>
+          <a href="artrev.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #1b1b32, #f1be32);">📝</div>
+        <div class="project-info">
+          <h3>Survey Form</h3>
+          <p>A feedback form with validation, a progress bar and a thank-you screen.</p>
+          <a href="survey_page_fcc.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #3b5d2a, #c8951b);">🌾</div>
+        <div class="project-info">
+          <h3>Tribute Page</h3>
+          <p>A tribute to Dr. Norman Borlaug with a timeline of his life.</p>
+          <!-- Your tribute file is named index.html. Rename it (e.g. tribute.html) and update this link if you like. -->
+          <a href="tribute_page_fcc.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #2c3e50, #3498db);">📚</div>
+        <div class="project-info">
+          <h3>Documentation Page</h3>
+          <p>A simple technical guide to HTML basics with a side navigation.</p>
+          <a href="documentation_page_fcc.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+      <div class="project-tile">
+        <div class="preview" style="background: linear-gradient(135deg, #0a0a23, #f1be32);">🚀</div>
+        <div class="project-info">
+          <h3>Landing Page</h3>
+          <p>A product landing page with a hero, feature cards, video and sign-up form.</p>
+          <a href="product_landing_page_fcc.html" target="_blank" rel="noopener" class="project-link">View project →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Get In Touch</h2>
+    <p class="subtitle">Want to chat or work together? Reach out!</p>
+    <div class="contact-links">
+      <!-- Replace these with your real GitHub profile and email. -->
+      <!--<a href="https://github.com/your-username" id="profile-link" target="_blank" rel="noopener">GitHub Profile</a>-->
+      <a href="kenfabiclobingco@gmail.com">Email Me</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Kenneth Lobingco. Made with ❤️ using HTML &amp; CSS.</p>
+  </footer>
+
+</body>
+
+</html>

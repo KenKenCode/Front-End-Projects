@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Color Thief Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Color Thief UMD build -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+  <style>
+    .swatch { width: 32px; height: 32px; border-radius: 4px; border: 1px solid #ddd; }
+  </style>
+</head>
+<body class="p-4">
+
+  <div class="container">
+    <h1 class="h4 mb-3">Color Thief Example</h1>
+
+    <!-- Image source (must be same-origin or CORS-enabled) -->
+    <img id="sourceImage"
+         src="https://picsum.photos/400/300"
+         alt="Sample"
+         crossorigin="anonymous"
+         class="img-fluid mb-3">
+
+    <!-- Display results -->
+    <div class="mb-3">
+      <span class="me-2">Dominant color:</span>
+      <span id="dominantSwatch" class="swatch align-middle"></span>
+      <code id="dominantText" class="ms-2"></code>
+    </div>
+
+    <div class="mb-3 d-flex gap-2 align-items-center">
+      <span>Palette:</span>
+      <div id="paletteSwatches" class="d-flex gap-2"></div>
+    </div>
+
+    <!-- Example: apply dominant color to a Bootstrap list -->
+    <ul id="dynamicList" class="list-group">
+      <li class="list-group-item">Track 1</li>
+      <li class="list-group-item">Track 2</li>
+      <li class="list-group-item">Track 3</li>
+    </ul>
+  </div>
+
+  <script>
+    const img = document.getElementById('sourceImage');
+    const list = document.getElementById('dynamicList');
+    const dominantSwatch = document.getElementById('dominantSwatch');
+    const dominantText = document.getElementById('dominantText');
+    const paletteSwatches = document.getElementById('paletteSwatches');
+
+    const colorThief = new ColorThief();
+
+    img.addEventListener('load', () => {
+      try {
+        // Dominant color
+        const [r, g, b] = colorThief.getColor(img);
+        const dominant = `rgb(${r}, ${g}, ${b})`;
+        dominantSwatch.style.backgroundColor = dominant;
+        dominantText.textContent = dominant;
+
+        // Apply to list background (and improve contrast for text)
+        list.style.backgroundColor = dominant;
+        list.style.color = (r * 0.299 + g * 0.587 + b * 0.114) < 150 ? '#fff' : '#000';
+
+        // Palette (7 colors)
+        const palette = colorThief.getPalette(img, 7);
+        paletteSwatches.innerHTML = '';
+        palette.forEach(([pr, pg, pb]) => {
+          const sw = document.createElement('div');
+          sw.className = 'swatch';
+          sw.style.backgroundColor = `rgb(${pr}, ${pg}, ${pb})`;
+          paletteSwatches.appendChild(sw);
+        });
+      } catch (e) {
+        console.error('Color extraction failed:', e);
+      }
+    });
+
+    // If the image might be cached, force load event
+    if (img.complete) {
+      img.dispatchEvent(new Event('load'));
+    }
+  </script>
+</body>
+</html>
